@@ -13,10 +13,14 @@ use std::{error::Error, fmt::Display, num::ParseFloatError};
 pub fn parse_money(input: &str) -> Result<(f64, String), MoneyError> {
     let pieces: Vec<&str>  = input.split_whitespace().collect();
     // ["42", "lira"]
-    let quantity: f64 = pieces[0].parse()?;
-    let currency_unit: String = pieces[1].into();
-    Ok((quantity, currency_unit))
-
+    if 2 != pieces.len() {
+        Err(MoneyError {kind:MoneyErrorKind::ParseError,})
+    }
+    else {
+        let quantity: f64 = pieces[0].parse()?;
+        let currency_unit: String = pieces[1].into();
+        Ok((quantity, currency_unit))
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -76,5 +80,10 @@ mod tests {
     fn negative_integer_number() {
         let result: Result<(f64, String), MoneyError> = parse_money("-42.1 lira");
         assert_eq!(Ok((-42.1, "lira".to_string())), result);
+    }
+
+    #[test]
+    fn single_item() {
+        parse_money("42").unwrap();
     }
 }
