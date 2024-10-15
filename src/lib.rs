@@ -7,6 +7,7 @@
 
 use core::str;
 use std::{error::Error, fmt::Display, num::ParseFloatError, str::FromStr}; 
+use std::process::Termination;
 
 
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -107,6 +108,18 @@ impl From<ParseFloatError> for MoneyError {
         MoneyError {
             kind: MoneyErrorKind::Quantity,
         }
+    }
+}
+
+impl Termination for Money {
+    fn report(self) -> std::process::ExitCode {
+        std::process::ExitCode::SUCCESS
+    }
+}
+
+impl Termination for MoneyError {
+    fn report(self) -> std::process::ExitCode {
+        std::process::ExitCode::FAILURE
     }
 }
 
