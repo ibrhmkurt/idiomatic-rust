@@ -55,17 +55,33 @@ impl Money {
     }
 }
 
+impl Display for Money {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Currency => {} {}", self.quantity, self.currency_unit )
+    }
+}
+
 impl FromStr for CurrencyUnit {
     type Err = MoneyError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_ref() {
-            "lira" | "tl" => Ok(CurrencyUnit::Lira),
-            "dolor" | "$" | "usd" => Ok(CurrencyUnit::Dolar),
+            "lira" | "₺" | "tl" => Ok(CurrencyUnit::Lira),
+            "dolar" | "$" | "usd" => Ok(CurrencyUnit::Dolar),
             "euro" | "€" | "eur" => Ok(CurrencyUnit::Euro),
             _ => Err(MoneyError {
                 kind: MoneyErrorKind::CurrencyUnit
             })
+        }
+    }
+}
+
+impl Display for CurrencyUnit {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CurrencyUnit::Lira => write!(f, "₺"),
+            CurrencyUnit::Dolar => write!(f, "$"),
+            CurrencyUnit::Euro => write!(f, "€"),
         }
     }
 }
