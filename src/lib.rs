@@ -8,7 +8,8 @@
 pub fn parse_money(input: &str) -> (i32, String) {
     let pieces: Vec<&str>  = input.split_whitespace().collect();
     // ["42", "lira"]
-    let quantity: i32  = pieces[0].parse::<i32>().unwrap();
+    let quantity: i32  = pieces[0].parse().unwrap();
+
     let currency_unit: String = pieces[1].into();
     (quantity, currency_unit)
 
